@@ -31,3 +31,13 @@ min_length = 4
 max_length = 4
 filtered_words = [word for word in words if min_length <= len(word) <= max_length]
 print(filtered_words)
+
+consecutive_words = 2
+word_combinations = {}
+for i in range(len(filtered_words) - consecutive_words + 1):
+    combo = ' '.join(filtered_words[i:i + consecutive_words])
+    if combo in word_combinations:
+        word_combinations[combo] += 1
+    else:
+        word_combinations[combo] = 1
+print("Word combinations:", word_combinations)
