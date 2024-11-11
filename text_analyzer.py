@@ -22,3 +22,7 @@ for i, char in enumerate(text):
         start = i + 1
 num_sentences = len(sentences)
 print("Number of sentences:", num_sentences)
+
+words = [word.strip(".,!?;:") for word in text.split()]
+num_words = len(words)
+print("Number of words:", num_words)
