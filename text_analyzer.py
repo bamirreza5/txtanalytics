@@ -26,3 +26,8 @@ print("Number of sentences:", num_sentences)
 words = [word.strip(".,!?;:") for word in text.split()]
 num_words = len(words)
 print("Number of words:", num_words)
+
+min_length = 4
+max_length = 4
+filtered_words = [word for word in words if min_length <= len(word) <= max_length]
+print(filtered_words)
