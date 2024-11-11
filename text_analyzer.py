@@ -32,7 +32,7 @@ max_length = 4
 filtered_words = [word for word in words if min_length <= len(word) <= max_length]
 print(filtered_words)
 
-consecutive_words = 2
+consecutive_words = 3
 word_combinations = {}
 for i in range(len(filtered_words) - consecutive_words + 1):
     combo = ' '.join(filtered_words[i:i + consecutive_words])
@@ -41,3 +41,11 @@ for i in range(len(filtered_words) - consecutive_words + 1):
     else:
         word_combinations[combo] = 1
 print("Word combinations:", word_combinations)
+
+with open('./output.txt', 'w') as output_file:
+    output_file.write(f"Number of lines: {num_lines}\n")
+    output_file.write(f"Number of sentences: {num_sentences}\n")
+    output_file.write(f"Number of words: {num_words}\n")
+    output_file.write("Word combinations:\n")
+    for combo, count in word_combinations.items():
+        output_file.write(f"{combo}: {count}\n")
