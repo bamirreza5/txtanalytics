@@ -26,6 +26,14 @@ def count_words(text):
 
 def filter_words(words, min_length, max_length):
     return [word for word in words if min_length <= len(word) <= max_length]
+    # Using list comprehension for simplicity and efficiency
+    # result = []
+    # for word in words:
+    #     if min_length <= len(word) <= max_length:
+    #         result.append(word)
+    # return result
+    
+
 
 def generate_word_combinations(filtered_words, consecutive_count):
     combinations = {}
@@ -71,8 +79,9 @@ def main(input_file, output_dir, min_length=4, max_length=4, consecutive_words=3
     combine_results(output_dir)
 
 if __name__ == "__main__":
-    input_file = './index.txt' 
-    output_dir = './output'
+    # input_file = './index.txt' 
+    input_file = input('Enter input directory : ')
+    output_dir = input('Enter output directory : ')
 
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
