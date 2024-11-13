@@ -27,7 +27,6 @@ def count_words(text):
 def read_ignored_words(file_path):
     try:
         with open(file_path, 'r', encoding='utf-8') as file:
-            print(file)
             return set(word.strip() for word in file.readlines())
     except FileNotFoundError:
         print(f"Ignored words file not found: {file_path}")
@@ -36,18 +35,16 @@ def read_ignored_words(file_path):
 def filter_words(words, min_length, max_length, ignored_words):
     return [word for word in words if min_length <= len(word) <= max_length and word.lower() not in ignored_words]
 
-    # Using list comprehension for simplicity and efficiency
-    # result = []
-    # for word in words:
-    #     if min_length <= len(word) <= max_length:
-    #         result.append(word)
-    # return result
-    
-def generate_word_combinations(filtered_words, consecutive_count):
+def generate_word_combinations(filtered_words, consecutive_count, sort_order=None):
     combinations = {}
     for i in range(len(filtered_words) - consecutive_count + 1):
         combo = ' '.join(filtered_words[i:i + consecutive_count])
         combinations[combo] = combinations.get(combo, 0) + 1
+    
+    if sort_order == 'asc':
+        return dict(sorted(combinations.items(), key=lambda item: item[1]))
+    elif sort_order == 'desc':
+        return dict(sorted(combinations.items(), key=lambda item: item[1], reverse=True))
     return combinations
 
 def save_to_file(file_path, content):
@@ -71,7 +68,7 @@ def combine_results(output_dir):
             final_content += file.read()
     save_to_file(os.path.join(output_dir, 'output.txt'), final_content)
 
-def main(input_file, output_dir, ignored_words_file, min_length=4, max_length=4, consecutive_words=3):
+def main(input_file, output_dir, ignored_words_file, min_length=1, max_length=20, consecutive_words=1, sort_order=None):
     text = read_file(input_file)
     if text is None:
         return
@@ -82,7 +79,7 @@ def main(input_file, output_dir, ignored_words_file, min_length=4, max_length=4,
     num_sentences = count_sentences(text)
     num_words, words = count_words(text)
     filtered_words = filter_words(words, min_length, max_length, ignored_words)
-    word_combinations = generate_word_combinations(filtered_words, consecutive_words)
+    word_combinations = generate_word_combinations(filtered_words, consecutive_words, sort_order)
 
     save_results(output_dir, num_lines, num_sentences, num_words, word_combinations)
     combine_results(output_dir)
@@ -93,7 +90,12 @@ if __name__ == "__main__":
     output_dir = input('Enter output directory: ')
     ignored_words_file = input('Enter ignored words file path: ')
 
+    min_length = int(input('Enter minimum word length: '))
+    max_length = int(input('Enter maximum word length: '))
+    consecutive_words = int(input('Enter number of consecutive words to count: '))
+    sort_order = input("Enter sort order (asc/desc or leave blank for no sorting): ").strip().lower()
+
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
-    main(input_file, output_dir, ignored_words_file)
+    main(input_file, output_dir, ignored_words_file, min_length, max_length, consecutive_words, sort_order)
