@@ -5,7 +5,7 @@ def show_main_window():
 
     root = tk.Tk()
     root.title("Text Analysis Application") 
-    root.geometry("500x500")
+    root.geometry("1000x1000")
     
     def show_text():
         text = entry.get()
@@ -24,12 +24,14 @@ def show_main_window():
 
 splash = tk.Tk()
 splash.title("Text Analysis Application")
-splash.geometry("400x300")
+splash.geometry("1000x1000")
 splash.configure(bg="lightgreen")
 
 splash_label = tk.Label(splash, text="Welcome to the Text Analysis Application!", font=("Arial", 16), bg="lightgreen")
 splash_label.pack(expand=True)
+splash_label = tk.Label(splash, text="develope for jsharif course", font=("Arial", 16), bg="lightgreen")
+splash_label.pack(expand=True)
 
-splash.after(3000, show_main_window)
+splash.after(5000, show_main_window)
 
 splash.mainloop()
