@@ -1,7 +1,6 @@
 import os
 import json
-import argparse
-"""use this format : python text_ana_arg_json.py ./index.txt output.json ignored.txt --min_length 3 --max_length 10 --consecutive_words 2 --sort_order asc"""
+
 def read_file(file_path):
     try:
         with open(file_path, 'r', encoding='utf-8') as file:
@@ -60,18 +59,26 @@ def save_results_to_json(output_file, results):
     with open(output_file, 'w', encoding='utf-8') as file:
         json.dump(results, file, indent=4)
 
-def main(args):
+def main():
+    input_file = input("Enter the path to the input text file: ")
+    output_file = input("Enter the path to save the output JSON file: ")
+    ignored_words_file = input("Enter the path to the ignored words file: ")
+    min_length = int(input("Enter the minimum word length (default is 1): ") or 1)
+    max_length = int(input("Enter the maximum word length (default is 20): ") or 20)
+    consecutive_words = int(input("Enter the number of consecutive words to count (default is 1): ") or 1)
+    sort_order = input("Enter sort order for word combinations (asc/desc or leave blank for no sorting): ").strip().lower()
+    
     while True:
-        text = read_file(args.input_file)
+        text = read_file(input_file)
         if text is None:
             break
         
-        ignored_words = read_ignored_words(args.ignored_words_file)
+        ignored_words = read_ignored_words(ignored_words_file)
         num_lines = count_lines(text)
         num_sentences = count_sentences(text)
         num_words, words = count_words(text)
-        filtered_words = filter_words(words, args.min_length, args.max_length, ignored_words)
-        word_combinations = generate_word_combinations(filtered_words, args.consecutive_words, args.sort_order)
+        filtered_words = filter_words(words, min_length, max_length, ignored_words)
+        word_combinations = generate_word_combinations(filtered_words, consecutive_words, sort_order)
         average_length, longest_words = calculate_word_statistics(words)
 
         results = {
@@ -84,31 +91,16 @@ def main(args):
             "Word combinations": word_combinations
         }
 
-        save_results_to_json(args.output_file, results)
-        print(f"Results saved to {args.output_file}")
+        save_results_to_json(output_file, results)
+        print(f"Results saved to {output_file}")
         
         user_input = input("Enter 'quit' to exit(ctrl+c) or press Enter to analyze again: ")
         if user_input.lower() == "quit":
             break
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Analyze a text file.")
-    parser.add_argument("input_file", help="Path to the input text file.")
-    parser.add_argument("output_file", help="Path to the output JSON file.")
-    parser.add_argument("ignored_words_file", help="Path to the ignored words file.")
-    parser.add_argument("--min_length", type=int, default=1, help="Minimum word length to consider.")
-    parser.add_argument("--max_length", type=int, default=20, help="Maximum word length to consider.")
-    parser.add_argument("--consecutive_words", type=int, default=1, help="Number of consecutive words to count.")
-    parser.add_argument("--sort_order", choices=["asc", "desc"], help="Sort order for word combinations.")
-    args = parser.parse_args()
-
     try:
-        if not os.path.exists(args.input_file):
-            print(f"Error: Input file '{args.input_file}' does not exist.")
-        elif not os.path.exists(args.ignored_words_file):
-            print(f"Error: Ignored words file '{args.ignored_words_file}' does not exist.")
-        else:
-            main(args)
+        main()
     except KeyboardInterrupt:
         print("\nProgram interrupted. Exiting gracefully.")
         exit(0)
